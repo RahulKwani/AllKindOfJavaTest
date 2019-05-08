@@ -1,23 +1,28 @@
-# Compiled class file
-*.class
+.gitignore
 
-# Log file
-*.log
+# Packages
+dist
+bin
+var
+sdist
+target
 
-# BlueJ files
-*.ctxt
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Translations
+*.mo
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+*.iml
+.idea
+.settings
+.DS_Store
+.classpath
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# Built documentation
