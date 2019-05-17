@@ -11,5 +11,7 @@ public class HelloGrpcNetty {
 
     System.out.println(loader.getResource("java.library.path"));
     System.out.println(loader.getParent());
+
+    System.out.println("sout ");
   }
 }
