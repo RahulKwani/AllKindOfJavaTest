@@ -1,0 +1,45 @@
+syntax = "proto3";
+package other;
+option java_package = "com.rahul.local.test.protobuf";
+option java_outer_classname = "SchoolManagement";
+
+message Teacher {
+    int32 id = 1;
+    string name = 2;
+    repeated Subject_Type subject = 3;
+    enum Subject_Type {
+        CHEMISTRY = 0;
+        HINDI = 1;
+        ENGLISH = 2;
+        MATH = 3;
+        BILOGY = 4;
+        PHYSHICS = 5;
+    }
+    repeated PhoneNumber phone = 5;
+        message PhoneNumber {
+            string number = 1;
+            PhoneType type = 2;
+        }
+        enum PhoneType {
+                MOBILE = 0;
+                LANDLINE = 1;
+        }
+    }
+
+message MYStudent {
+        int32 id = 1;
+        string name = 2;
+        int32 age = 3;
+        ClassLevel level = 4;
+        enum ClassLevel {
+            PRE_SCHOOL = 0;
+            KG1 = 1;
+            KG2 = 2;
+            FIRST = 3;
+            SECOND = 4;
+            THIRD = 5;
+            FOURTH = 6;
+            FIFTH = 7;
+        }
+    }
+
