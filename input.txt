@@ -1,0 +1,12 @@
+Mail App, Authentication API, v6
+Video Call App, Authentication API, v7
+Mail App, Data Storage API, v10
+Chat App, Data Storage API, v11
+Mail App, Search API, v6
+Chat App, Authentication API, v8
+asdgag App, Presence API, v2
+TEST App, Presence API, v3
+TEST2 App, Presence API, v2
+TEST3 App, Presence API, v2
+Video Call App, Data Storage API, v11
+Video Call App, Video Compression API, v3
