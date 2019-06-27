@@ -11,6 +11,7 @@
 
     <groupId>com.local.test.program.netty.grpc</groupId>
     <artifactId>learn-netty-and-grpc</artifactId>
+    <packaging>pom</packaging>
 
     <dependencies>
         <dependency>
