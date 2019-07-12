@@ -1,23 +1,15 @@
 package com.local.firebase.token;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class MySolution {
 
@@ -97,10 +89,10 @@ public class MySolution {
         continue;
       }
 
-//      if (f.get(0).version <= minVer) {
-//        leastApiUser = f;
-//        minVer = f.get(0).version;
-//      }
+      //      if (f.get(0).version <= minVer) {
+      //        leastApiUser = f;
+      //        minVer = f.get(0).version;
+      //      }
     }
 
     if (leastApiUser != null) {
@@ -129,16 +121,13 @@ public class MySolution {
         }
       }
 
-      AnotherApp(){
-      }
+      AnotherApp() {}
 
       @Override
       public String toString() {
-        return "AnotherApp{" + "consumerList=" + consumerList + ", version=" + version
-            + '}';
+        return "AnotherApp{" + "consumerList=" + consumerList + ", version=" + version + '}';
       }
     }
-
 
     Map<String, AnotherApp> map = new HashMap<>();
 
@@ -151,10 +140,10 @@ public class MySolution {
         AnotherApp current = map.get(producerApiName);
         current.isUsedMoreThanOnce = true;
         app.isUsedMoreThanOnce = true;
-        if(current.version > app.version) {
+        if (current.version > app.version) {
 
           map.put(producerApiName, app);
-        } else if(current.version == app.version){
+        } else if (current.version == app.version) {
 
           current.consumerList.addAll(app.consumerList);
         }
@@ -171,11 +160,9 @@ public class MySolution {
       }
     }
 
-    //System.out.println(minVerAPI);
-    for(String out :minVerAPI.consumerList){
+    // System.out.println(minVerAPI);
+    for (String out : minVerAPI.consumerList) {
       System.out.println(out);
     }
   }
-
-
 }

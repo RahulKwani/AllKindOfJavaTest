@@ -1,14 +1,14 @@
 package com.local.firebase.token;
 
 /* Do not add a package declaration */
+import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.io.*;
 
 /* DO NOT CHANGE ANYTHING ABOVE THIS LINE */
 /* You may add any imports here, if you wish, but only from the
- standard library */
+standard library */
 
 /* Do not add a namespace declaration */
 
@@ -22,7 +22,7 @@ public class Main {
       private int version;
       private boolean isUsedMoreThanOnce = false;
 
-      //These are implicitly private bcoz class is private
+      // These are implicitly private bcoz class is private
       AnotherApp(String[] apiInfo) {
         if (apiInfo.length != 3) {
           throw new RuntimeException("CSV file seems deformed");
@@ -36,21 +36,18 @@ public class Main {
         }
       }
 
-      AnotherApp(){
-      }
+      AnotherApp() {}
 
       @Override
       public String toString() {
-        return "AnotherApp{" + "consumerList=" + consumerList + ", version=" + version
-            + '}';
+        return "AnotherApp{" + "consumerList=" + consumerList + ", version=" + version + '}';
       }
     }
 
     Map<String, AnotherApp> apiData = new HashMap<>();
     String line = "";
     try {
-      BufferedReader bufferedReader = new BufferedReader(new FileReader(
-          new File("input.txt")));
+      BufferedReader bufferedReader = new BufferedReader(new FileReader(new File("input.txt")));
 
       while ((line = bufferedReader.readLine()) != null) {
         String[] appInfo = line.split(",");
@@ -61,10 +58,10 @@ public class Main {
           AnotherApp current = apiData.get(producerApiName);
           current.isUsedMoreThanOnce = true;
           app.isUsedMoreThanOnce = true;
-          if(current.version > app.version) {
+          if (current.version > app.version) {
 
             apiData.put(producerApiName, app);
-          } else if(current.version == app.version){
+          } else if (current.version == app.version) {
 
             current.consumerList.addAll(app.consumerList);
           }
@@ -82,8 +79,7 @@ public class Main {
         }
       }
 
-      PrintWriter output = new PrintWriter(new BufferedWriter(
-          new FileWriter("output.txt")));
+      PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter("output.txt")));
       for (String s : minVerAPI.consumerList) {
         output.println(s);
       }

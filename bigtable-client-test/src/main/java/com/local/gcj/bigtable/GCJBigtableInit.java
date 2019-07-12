@@ -15,12 +15,12 @@ public class GCJBigtableInit {
     dataClient = BigtableDataClient.create(PROJECT_ID, INSTANCE_ID);
   }
 
-  public BigtableDataClient getDataClient(){
+  public BigtableDataClient getDataClient() {
     return dataClient;
   }
 
-  public BigtableTableAdminClient getAdminClient(){
-    if(adminClient == null){
+  public BigtableTableAdminClient getAdminClient() {
+    if (adminClient == null) {
       try {
         adminClient = BigtableTableAdminClient.create(PROJECT_ID, INSTANCE_ID);
       } catch (IOException e) {
@@ -29,8 +29,4 @@ public class GCJBigtableInit {
     }
     return adminClient;
   }
-
-
-
-
 }

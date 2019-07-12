@@ -21,7 +21,7 @@
         <maven.version>3.3.0+</maven.version>
 
 
-        <cloud.bigtable.gcj>0.90.0-alpha</cloud.bigtable.gcj>
+        <cloud.bigtable.gcj>0.100.0</cloud.bigtable.gcj>
     </properties>
 
     <dependencies>
