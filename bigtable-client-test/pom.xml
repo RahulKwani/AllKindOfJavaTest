@@ -20,8 +20,8 @@
         <!--This will set maven version-->
         <maven.version>3.3.0+</maven.version>
 
-
-        <cloud.bigtable.gcj>0.100.0</cloud.bigtable.gcj>
+        <cloud.client.gcj>1.91.0</cloud.client.gcj>
+        <cloud.bigtable.gcj>0.109.0</cloud.bigtable.gcj>
     </properties>
 
     <dependencies>
@@ -31,10 +31,23 @@
             <version>${cloud.bigtable.gcj}</version>
         </dependency>
         <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-logging</artifactId>
+            <version>${cloud.client.gcj}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-pubsub</artifactId>
+            <version>${cloud.client.gcj}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.api-client</groupId>
             <artifactId>google-api-client</artifactId>
             <version>1.25.0</version>
         </dependency>
+
+
     </dependencies>
 
 </project>
