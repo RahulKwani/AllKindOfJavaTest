@@ -27,6 +27,6 @@ public class MiniCluster {
     System.out.println("###########@@@@@@@@@@");
     System.out.println(hbase.getConfiguration());
     System.out.println(hbase.getConfiguration().get("hbase.zookeeper.quorum"));
-    System.out.println(hbase.getConfiguration().get("hbase.zookeeper.property.clientPorthbase.zookeeper.property.clientPort"));
+    System.out.println(hbase.getConfiguration().get("hbase.zookeeper.property.clientPort"));
   }
 }

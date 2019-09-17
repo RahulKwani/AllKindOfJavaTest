@@ -34,7 +34,7 @@ public class HBaseBoot {
   public HBaseBoot(boolean flag) throws Exception {
     Configuration configuration = HBaseConfiguration.create();
     configuration.set("hbase.zookeeper.quorum", "localhost");
-    configuration.set("hbase.zookeeper.property.clientPort", "63787");
+    configuration.set("hbase.zookeeper.property.clientPort", "59954");
    connection = ConnectionFactory.createConnection(configuration);
    admin = connection.getAdmin();
   }

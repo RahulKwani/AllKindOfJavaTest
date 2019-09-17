@@ -21,6 +21,7 @@ public class FirebaseToken {
                         + "/chat-app-performace-firebase.json"))
             .createScoped(
                 Arrays.asList(
+                    "https://www.googleapis.com/auth/cloud-platform",
                     "https://www.googleapis.com/auth/firebase.database",
                     "https://www.googleapis.com/auth/userinfo.email"
                 )
