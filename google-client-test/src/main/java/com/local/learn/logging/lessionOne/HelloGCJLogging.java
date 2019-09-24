@@ -16,5 +16,6 @@ public class HelloGCJLogging {
 
     LOG.info("Logging INFO with java.util.logging");
     LOG.severe("Logging ERROR with java.util.logging");
+    LOG.fine("SOMEEOE");
   }
 }
