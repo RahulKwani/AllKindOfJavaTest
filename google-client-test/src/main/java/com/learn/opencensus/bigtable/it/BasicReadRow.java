@@ -1,16 +1,11 @@
 package com.learn.opencensus.bigtable.it;
 
 import com.google.api.gax.rpc.ServerStream;
-import com.google.api.gax.tracing.ApiTracer;
-import com.google.api.gax.tracing.ApiTracerFactory;
-import com.google.api.gax.tracing.SpanName;
 import com.google.cloud.bigtable.data.v2.BigtableDataClient;
 import com.google.cloud.bigtable.data.v2.BigtableDataSettings;
 import com.google.cloud.bigtable.data.v2.models.Query;
 import com.google.cloud.bigtable.data.v2.models.Row;
-import com.google.cloud.bigtable.data.v2.stub.metrics.RpcViews;
 import io.opencensus.common.Scope;
-import io.opencensus.exporter.trace.zipkin.ZipkinExporterConfiguration;
 import io.opencensus.exporter.trace.zipkin.ZipkinTraceExporter;
 import io.opencensus.trace.AttributeValue;
 import io.opencensus.trace.Span;
@@ -29,26 +24,27 @@ public class BasicReadRow {
 
   private static final Logger logger = Logger.getLogger(BasicReadRow.class.getName());
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, InterruptedException {
 
     // 1. Configure exporter to export traces to Zipkin.
     BigtableDataSettings.enableOpenCensusStats();
 
-    //    LoggingTraceExporter.register();
-    BigtableDataSettings.Builder settingsB =
-        BigtableDataSettings.newBuilder()
-            .setProjectId("grass-clump-479")
-            .setInstanceId("bigtableio-test");
 
     // 1. Configure exporter to export traces to Zipkin.
     ZipkinTraceExporter.createAndRegister(
-        "http://localhost:9411/api/v2/spans", "bigtable-tracing-to-zipkin-service");
+        "http://localhost:9411/api/v2/spans", "Another-service-tracing");
 
     // 2. Configure 100% sample rate, otherwise, few traces will be sampled.
     TraceConfig traceConfig = Tracing.getTraceConfig();
     TraceParams activeTraceParams = traceConfig.getActiveTraceParams();
     traceConfig.updateActiveTraceParams(
         activeTraceParams.toBuilder().setSampler(Samplers.alwaysSample()).build());
+
+    //    LoggingTraceExporter.register();
+    BigtableDataSettings.Builder settingsB =
+        BigtableDataSettings.newBuilder()
+            .setProjectId("grass-clump-479")
+            .setInstanceId("bigtableio-test");
 
     // 3. Get the global singleton Tracer object.
     Tracer tracer = Tracing.getTracer();
@@ -59,32 +55,32 @@ public class BasicReadRow {
     // It implements AutoClosable, so it'll be closed when the try block ends.
     try (Scope scope = tracer.spanBuilder("main").startScopedSpan()) {
       System.out.println("About to do some busy work...");
-      for (int i = 0; i < 3; i++) {
-        doWork(i, dataClient);
-      }
+      doWork(10000, dataClient);
     }
 
     dataClient.close();
   }
 
-  private static void doWork(int i, BigtableDataClient client) {
+  private static void doWork(int totalRows, BigtableDataClient client) throws InterruptedException {
     // 6. Get the global singleton Tracer object.
     Tracer tracer = Tracing.getTracer();
 
     try (Scope scope = tracer.spanBuilder("doBigtableThing").startScopedSpan()) {
       ServerStream<Row> row =
-          client.readRows(Query.create("BeamCloudBigtableIOIntegrationTest").limit(20));
+          client.readRows(Query.create("BeamCloudBigtableIOIntegrationTest").limit(totalRows));
 
-      logger.info("FETCHED ROWS");
+      int i = 0;
       for (Row r : row) {
-        logger.info(r.getKey().toStringUtf8());
-        logger.info(r.getCells().toString());
+        System.out.println(r.getKey().toStringUtf8());
+        i++;
+        if (i % 100 == 0) {
+          Thread.sleep(1000);
+        }
       }
     }
-
   }
 
-  public static void main_working(String[] args) {
+  public static void main3(String[] args) {
     // 1. Configure exporter to export traces to Zipkin.
     ZipkinTraceExporter.createAndRegister(
         "http://localhost:9411/api/v2/spans", "tracing-to-zipkin-service");
