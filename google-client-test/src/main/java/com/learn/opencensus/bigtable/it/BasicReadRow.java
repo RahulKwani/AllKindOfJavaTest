@@ -29,7 +29,6 @@ public class BasicReadRow {
     // 1. Configure exporter to export traces to Zipkin.
     BigtableDataSettings.enableOpenCensusStats();
 
-
     // 1. Configure exporter to export traces to Zipkin.
     ZipkinTraceExporter.createAndRegister(
         "http://localhost:9411/api/v2/spans", "Another-service-tracing");

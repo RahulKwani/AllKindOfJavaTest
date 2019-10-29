@@ -13,7 +13,6 @@ import io.opencensus.trace.config.TraceParams;
 import io.opencensus.trace.samplers.Samplers;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
 
 /** This class tests OpenCensus on local machine. */
 public class TestOpenCensus {
@@ -44,12 +43,11 @@ public class TestOpenCensus {
       e.printStackTrace();
     }
 
-
     try (Scope scope = Tracing.getTracer().spanBuilder("oadfa").startScopedSpan()) {
       System.out.println("About to do some busy work...");
       for (int i = 0; i < 10; i++) {
         final int val = i;
-       doWork(i);
+        doWork(i);
       }
     }
 
@@ -97,12 +95,11 @@ public class TestOpenCensus {
   private static void anotherMethod() {
     System.out.println("Another temp method");
 
-    try(Scope ss = Tracing.getTracer().spanBuilder("AnotherMeth").startScopedSpan()){
+    try (Scope ss = Tracing.getTracer().spanBuilder("AnotherMeth").startScopedSpan()) {
       Thread.sleep(50);
-    } catch (Exception e){
+    } catch (Exception e) {
       System.out.println("Exception occured");
       e.printStackTrace();
     }
-
   }
 }
