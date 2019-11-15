@@ -1,5 +1,9 @@
 package com.learn.hbase.bigtable;
 
+import static com.learn.hbase.bigtable.util.MyUtil.qualifier;
+import static com.learn.hbase.bigtable.util.MyUtil.timeInLong;
+import static com.learn.hbase.bigtable.util.MyUtil.value;
+
 import com.learn.hbase.bigtable.util.HBaseBoot;
 import java.io.IOException;
 import org.apache.hadoop.hbase.Cell;
@@ -10,10 +14,6 @@ import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
-
-import static com.learn.hbase.bigtable.util.MyUtil.qualifier;
-import static com.learn.hbase.bigtable.util.MyUtil.timeInLong;
-import static com.learn.hbase.bigtable.util.MyUtil.value;
 
 /**
  * This is meant to understand <a
@@ -48,7 +48,7 @@ public class ColumnTimeRangeLearn {
   private Table table;
 
   ColumnTimeRangeLearn() throws Exception {
-    booter = new HBaseBoot();
+    booter = new HBaseBoot(63264);
   }
 
   private void addFiveRows(String rowKey) throws IOException {
@@ -74,18 +74,21 @@ public class ColumnTimeRangeLearn {
 
   public static void main(String[] args) throws Exception {
     ColumnTimeRangeLearn ct = new ColumnTimeRangeLearn();
-    ct.table = ct.booter.connection.getTable(TableName.valueOf(TABLE_ID));
-    // Admin operations
-    //    ct.booter.admin.deleteTable(TableName.valueOf(TABLE_ID));
-    //    ct.createAndAdd();
+    //     Admin operations
+    if (!ct.booter.admin.tableExists(TableName.valueOf(TABLE_ID))) {
+      ct.createAndAdd();
+    }
+    // ct.booter.admin.deleteTable(TableName.valueOf(TABLE_ID));
 
-    // simple table scan
-//        ct.scanTable();
-    //    System.out.println("--------------------------------");
+    ct.table = ct.booter.connection.getTable(TableName.valueOf(TABLE_ID));
+
+    //     simple table scan
+    ct.scanTable();
+    System.out.println("--------------------------------");
 
     ct.scanTimeStampWithCF();
     System.out.println("--------------------------------");
-    //        ct.scanTimeStamp();
+    ct.scanTimeStamp();
   }
 
   private void createAndAdd() throws IOException {
@@ -148,19 +151,18 @@ public class ColumnTimeRangeLearn {
     Scan scan =
 
         // Bigtable
-                new Scan()
-                    .setColumnFamilyTimeRange("cf1".getBytes(), 942517717954L, 942517752782L)
-                    .setColumnFamilyTimeRange("cf2".getBytes(), 1503167215265L, 1503167283429L)
-                    .setColumnFamilyTimeRange("cf3".getBytes(), 1554316104295L, 1554316199999L)
-                    .setColumnFamilyTimeRange("cf3".getBytes(), 1503167212213L, 1503167375633L);
+        new Scan()
+            .setColumnFamilyTimeRange("cf1".getBytes(), 942517717954L, 942517752782L)
+            .setColumnFamilyTimeRange("cf2".getBytes(), 1503167215265L, 1503167283429L)
+            .setColumnFamilyTimeRange("cf3".getBytes(), 1554316104295L, 1554316199999L)
+            .setColumnFamilyTimeRange("cf3".getBytes(), 1503167212213L, 1503167375633L);
 
-
-        // HBase
-//        new Scan()
-//            .setColumnFamilyTimeRange("cf1".getBytes(), 1503167301508L, 1503167390224L)
-//            .setColumnFamilyTimeRange("cf2".getBytes(), 942517705182L, 942517799354L)
-//            .setColumnFamilyTimeRange("cf3".getBytes(), 1554316100523L, 1554316152312L)
-//            .setColumnFamilyTimeRange("cf3".getBytes(), 1503167296765L, 1503167362401L);
+    // HBase
+    //        new Scan()
+    //            .setColumnFamilyTimeRange("cf1".getBytes(), 1503167301508L, 1503167390224L)
+    //            .setColumnFamilyTimeRange("cf2".getBytes(), 942517705182L, 942517799354L)
+    //            .setColumnFamilyTimeRange("cf3".getBytes(), 1554316100523L, 1554316152312L)
+    //            .setColumnFamilyTimeRange("cf3".getBytes(), 1503167296765L, 1503167362401L);
 
     printTimestampOnly(table.getScanner(scan));
   }

@@ -31,12 +31,13 @@ public class HBaseBoot {
     admin = connection.getAdmin();
   }
 
-  public HBaseBoot(boolean flag) throws Exception {
+  /* TO run against the HBase minicluster */
+  public HBaseBoot(int clientPort) throws Exception {
     Configuration configuration = HBaseConfiguration.create();
     configuration.set("hbase.zookeeper.quorum", "localhost");
-    configuration.set("hbase.zookeeper.property.clientPort", "59954");
-   connection = ConnectionFactory.createConnection(configuration);
-   admin = connection.getAdmin();
+    configuration.set("hbase.zookeeper.property.clientPort", String.valueOf(clientPort));
+    connection = ConnectionFactory.createConnection(configuration);
+    admin = connection.getAdmin();
   }
 
   public void createTable(String tableId, String... columnFamilies) throws IOException {

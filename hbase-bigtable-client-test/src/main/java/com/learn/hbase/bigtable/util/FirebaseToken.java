@@ -23,9 +23,7 @@ public class FirebaseToken {
                 Arrays.asList(
                     "https://www.googleapis.com/auth/cloud-platform",
                     "https://www.googleapis.com/auth/firebase.database",
-                    "https://www.googleapis.com/auth/userinfo.email"
-                )
-            );
+                    "https://www.googleapis.com/auth/userinfo.email"));
     googleCredential.refreshToken();
     return googleCredential.getAccessToken();
   }

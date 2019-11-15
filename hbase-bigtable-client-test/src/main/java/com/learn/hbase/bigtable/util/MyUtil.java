@@ -1,10 +1,12 @@
 package com.learn.hbase.bigtable.util;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.Random;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -79,5 +81,124 @@ public class MyUtil {
       }
       result = rs.next();
     }
+  }
+
+  public static void foo(String randomString) {
+    if (isBadTableName(randomString)) {
+      try {
+        createTable("a" + randomString);
+        System.out.println("NOT a BadName" + randomString);
+        return;
+      } catch (Exception e) {
+         //System.out.println("Bad name: " + randomString);
+      }
+    } else {
+      System.out.println("Not a isBadTableName: " + randomString);
+    }
+  }
+
+  public static void fixedFoo(String randomString) {
+    if (isBadTableName2(randomString)) {
+      try {
+        createTable("a" + randomString);
+        System.out.println("Fixed --->NOT a BadName2" + randomString);
+        return;
+      } catch (Exception e) {
+         //System.out.println("Fixed --->Bad name2: " + randomString);
+      }
+    } else {
+      System.out.println("Fixed ---> Not a isBadTableName2: " + randomString);
+    }
+  }
+
+  public static void main(String[] args) {
+
+    for (int i = 0; i < 200; i++) {
+      String randomString = RandomStringUtils.random(10, false, false);
+      foo(randomString);
+      fixedFoo(randomString);
+    }
+
+    //    String test = "a釋妢醜婮㳯뺲䂆㾨柮脻";
+    //    testArg(test);
+    /*
+    aᐰ眼豤皳塇趦䜸궁酡㯉
+    isBadTableName
+
+    a먔倔芘滽熬단ᨶ炴晝펆
+    isBadTableName
+    --
+    a剸쐪䠗츹趜䙰㨤ᗠ海룒
+
+    a䐖襃퉵ꖻ롾ﻱ瘈緸캧㯐
+
+    a䐖襃퉵ꖻ롾ﻱ瘈緸캧㯐
+
+    a䐖襃퉵ꖻ롾ﻱ瘈緸캧㯐
+
+    a䎲ᗄ膰ර栤柨쌼傸捐狤
+
+    a楴䘀ሳ鲞텍暲桛䱎熅蘫
+    a啘慾ްᨮ팠硰ᒑ䢱䥪帶
+    a箈跑ꡗ솼巤杦囹琿臽膢
+
+    a梦紧㟒벳ყ珪끵喷厨럿
+    aӦᕦꚩ厂珣ǽ짗䎲㷻膈
+
+     */
+
+    //    aك氚步ꇠ굃墡杖汷⋞暚
+  }
+
+  private static boolean isBadTableName2(String tableName) {
+    for (int i = 0; i < tableName.length(); ++i) {
+      char c = tableName.charAt(i);
+      if (!Character.isAlphabetic(c) && !Character.isDigit(c) && c != '_' && c != '-' && c != '.') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static void createTable(String badName) {
+    TableName tableName = TableName.valueOf(badName);
+  }
+
+  protected static boolean isBadTableName(String tableName) {
+    byte[] tableChars = tableName.getBytes();
+    for (byte c : tableChars) {
+      if (!Character.isAlphabetic(c) && !Character.isDigit(c) && c != '_' && c != '-' && c != '.') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static boolean isNotALegalTableQualifierName(byte[] qualifierName) {
+    int start = 0;
+    int end = qualifierName.length;
+    if (end - start < 1) {
+      return true;
+    } else if (qualifierName[start] != 46 && qualifierName[start] != 45) {
+      String qualifierString =
+          new String(qualifierName, start, end - start, StandardCharsets.UTF_8);
+      if (qualifierString.equals("zookeeper")) {
+        return true;
+      } else {
+        for (int i = 0; i < qualifierString.length(); ++i) {
+          char c = qualifierString.charAt(i);
+          if (!Character.isAlphabetic(c)
+              && !Character.isDigit(c)
+              && c != '_'
+              && c != '-'
+              && c != '.') {
+            return true;
+          }
+        }
+      }
+    } else {
+      return true;
+    }
+    return false;
   }
 }
