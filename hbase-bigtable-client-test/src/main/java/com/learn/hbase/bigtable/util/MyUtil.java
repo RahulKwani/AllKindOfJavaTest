@@ -90,7 +90,7 @@ public class MyUtil {
         System.out.println("NOT a BadName" + randomString);
         return;
       } catch (Exception e) {
-         //System.out.println("Bad name: " + randomString);
+        // System.out.println("Bad name: " + randomString);
       }
     } else {
       System.out.println("Not a isBadTableName: " + randomString);
@@ -104,7 +104,7 @@ public class MyUtil {
         System.out.println("Fixed --->NOT a BadName2" + randomString);
         return;
       } catch (Exception e) {
-         //System.out.println("Fixed --->Bad name2: " + randomString);
+        // System.out.println("Fixed --->Bad name2: " + randomString);
       }
     } else {
       System.out.println("Fixed ---> Not a isBadTableName2: " + randomString);

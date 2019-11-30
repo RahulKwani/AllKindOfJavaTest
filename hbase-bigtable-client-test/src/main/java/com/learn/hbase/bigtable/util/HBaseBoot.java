@@ -5,12 +5,12 @@ import com.google.cloud.bigtable.hbase.BigtableOptionsFactory;
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.HColumnDescriptor;
+import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Admin;
-import org.apache.hadoop.hbase.client.ColumnFamilyDescriptorBuilder;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.TableDescriptorBuilder;
 
 public class HBaseBoot {
 
@@ -28,6 +28,7 @@ public class HBaseBoot {
       config.set(BigtableOptionsFactory.BIGTABLE_ADMIN_HOST_KEY, "localhost:8086");
     }
     connection = ConnectionFactory.createConnection(config);
+
     admin = connection.getAdmin();
   }
 
@@ -40,14 +41,14 @@ public class HBaseBoot {
     admin = connection.getAdmin();
   }
 
-  public void createTable(String tableId, String... columnFamilies) throws IOException {
-    TableDescriptorBuilder tableBuilder =
-        TableDescriptorBuilder.newBuilder(TableName.valueOf(tableId));
+  public static void createTable(Admin admin, String tableId, String... columnFamilies)
+      throws IOException {
+    HTableDescriptor tableBuilder = new HTableDescriptor(TableName.valueOf(tableId));
 
     for (String cf : columnFamilies) {
-      tableBuilder.setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder(cf.getBytes()).build());
+      tableBuilder.addFamily(new HColumnDescriptor(cf.getBytes()));
     }
 
-    admin.createTable(tableBuilder.build());
+    admin.createTable(tableBuilder);
   }
 }
