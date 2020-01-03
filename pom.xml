@@ -13,6 +13,7 @@
         <module>kotlin-learn</module>
         <module>learn-netty-and-grpc</module>
         <module>hbase-bigtable-client-test</module>
+        <module>test-simple-things</module>
     </modules>
 
     <build>
