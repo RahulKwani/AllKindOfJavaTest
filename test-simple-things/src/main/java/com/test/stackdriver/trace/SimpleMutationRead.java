@@ -40,32 +40,32 @@ public class SimpleMutationRead {
     logger.setLevel(Level.INFO);
     configureOpenCensusExporters(Samplers.alwaysSample());
 
-    try (BigtableDataClient client = BigtableDataClient.create(PROJECT_ID, INSTANCE_ID)) {
-      try (Scope ss = tracer.spanBuilder("bigtable.readRow.op").startScopedSpan()) {
+    try (Scope ss = tracer.spanBuilder("bigtable.readRow.op").startScopedSpan();
+        BigtableDataClient client = BigtableDataClient.create(PROJECT_ID, INSTANCE_ID)) {
 
-        String rowPrefix = UUID.randomUUID().toString();
-        try (Batcher<RowMutationEntry, Void> batcher = client.newBulkMutationBatcher(TABLE_ID);
-            Scope writeScope = tracer.spanBuilder("WriteRows").startScopedSpan()) {
+      String rowPrefix = UUID.randomUUID().toString();
+      try (Batcher<RowMutationEntry, Void> batcher = client.newBulkMutationBatcher(TABLE_ID);
+          Scope writeScope = tracer.spanBuilder("WriteRows").startScopedSpan()) {
 
-          Span span = tracer.getCurrentSpan();
-          span.addAnnotation("Writing to the table...");
-
-          for (int i = 0; i < 10; i++) {
-            batcher.add(
-                RowMutationEntry.create(rowPrefix + "-" + i)
-                    .setCell(FAMILY_ID, "qualifier", 10_000L, "value-" + i));
-          }
-        }
+        Span span = tracer.getCurrentSpan();
+        span.addAnnotation("Writing to the table...");
 
         for (int i = 0; i < 10; i++) {
-          try (Scope readScope = tracer.spanBuilder("ReadRow").startScopedSpan()) {
-            Row row = client.readRow(TABLE_ID, rowPrefix + "-" + i);
-            logger.debug("Row: " + row.getKey().toStringUtf8());
-          }
+          batcher.add(
+              RowMutationEntry.create(rowPrefix + "-" + i)
+                  .setCell(FAMILY_ID, "qualifier", 10_000L, "value-" + i));
         }
       }
+
+      for (int i = 0; i < 10; i++) {
+        try (Scope readScope = tracer.spanBuilder("ReadRow").startScopedSpan()) {
+          Row row = client.readRow(TABLE_ID, rowPrefix + "-" + i);
+          logger.info("Row: " + row.getKey().toStringUtf8());
+        }
+      }
+
+      BigtableVeneer.sleep(5100);
     }
-    BigtableVeneer.sleep(5100);
   }
 
   // [START config_oc_stackdriver_export]
