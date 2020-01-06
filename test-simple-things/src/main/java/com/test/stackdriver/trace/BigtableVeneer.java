@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.UUID;
-import org.apache.hadoop.hbase.client.Scan;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -202,16 +201,16 @@ public class BigtableVeneer {
       // Get the first greeting by row key
       String rowKey = prefix + "#greeting0";
       Row rowResult = client.readRow(TABLE_ID, rowKey);
-      String greeting = rowResult.getCells().get(0).getValue().toStringUtf8();
-      logger.debug("Get a single greeting by row key");
-      logger.debug(String.format("\t%s = %s\n", rowKey, greeting));
+
+      //      String greeting = rowResult.getCells().get(0).getValue().toStringUtf8();
+      //      logger.debug("Get a single greeting by row key");
+      logger.debug(String.format("\t%s = %s\n", rowKey, rowResult));
       // [END getting_a_row]
 
       // [START scanning_all_rows]
       // Now scan across all rows for UUID prefix.
       byte[] startRow = (prefix + "#greeting0").getBytes();
       byte[] stopRow = (prefix + "#greeting3").getBytes();
-      Scan scan = new Scan().withStartRow(startRow).withStopRow(stopRow);
 
       Query query = Query.create(TABLE_ID).prefix(prefix).range("#greeting0", "#greeting3");
       logger.debug("Scan for all greetings:");
