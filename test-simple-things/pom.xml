@@ -20,6 +20,7 @@
     <google-auth-library-oauth2-http.version>0.15.0</google-auth-library-oauth2-http.version>
     <opencensus.version>0.19.2</opencensus.version>
     <bigtable.version>1.10.0</bigtable.version>
+    <bigtable.veneer.version>1.8.0</bigtable.veneer.version>
   </properties>
 
   <dependencies>
@@ -45,7 +46,7 @@
       <scope>runtime</scope>
     </dependency>
 
-<!--    Dependencies from Google Community Java class-->
+    <!--    Dependencies from Google Community Java class-->
     <dependency>
       <groupId>com.google.auth</groupId>
       <artifactId>google-auth-library-oauth2-http</artifactId>
@@ -61,7 +62,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-bigtable</artifactId>
-      <version>1.8.1-SNAPSHOT</version>
+      <version>${bigtable.veneer.version}</version>
     </dependency>
 
     <dependency>
