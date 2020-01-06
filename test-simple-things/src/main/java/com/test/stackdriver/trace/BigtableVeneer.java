@@ -160,7 +160,7 @@ public class BigtableVeneer {
     }
   }
 
-  private static void sleep(int ms) {
+  static void sleep(int ms) {
     try {
       Thread.sleep(ms);
     } catch (Exception e) {
