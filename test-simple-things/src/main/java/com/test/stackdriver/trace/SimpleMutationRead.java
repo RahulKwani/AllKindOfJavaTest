@@ -37,8 +37,7 @@ public class SimpleMutationRead {
   public static void main(String[] args) throws IOException {
     configureOpenCensusExporters(Samplers.alwaysSample());
 
-    try (Scope ss = tracer.spanBuilder("bigtable.readRow.op").startScopedSpan();
-        BigtableDataClient client = BigtableDataClient.create(PROJECT_ID, INSTANCE_ID)) {
+    try (BigtableDataClient client = BigtableDataClient.create(PROJECT_ID, INSTANCE_ID)) {
 
       String rowPrefix = UUID.randomUUID().toString();
 
@@ -52,10 +51,12 @@ public class SimpleMutationRead {
                 .setCell(FAMILY_ID, "qualifier", 10_000L, "value-" + i));
       }
 
-      for (int i = 0; i < ROWS_COUNT; i++) {
-        try (Scope readScope = tracer.spanBuilder("ReadRow").startScopedSpan()) {
-          Row row = client.readRow(TABLE_ID, rowPrefix + "-" + i);
-          logger.info("Row: " + row.getKey().toStringUtf8());
+      try (Scope ss = tracer.spanBuilder("bigtable.readRow.op").startScopedSpan()) {
+        for (int i = 0; i < ROWS_COUNT; i++) {
+          try (Scope readScope = tracer.spanBuilder("ReadRow").startScopedSpan()) {
+            Row row = client.readRow(TABLE_ID, rowPrefix + "-" + i);
+            logger.info("Row: " + row.getKey().toStringUtf8());
+          }
         }
       }
 
