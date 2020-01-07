@@ -1,9 +1,12 @@
 package com.test.stackdriver.trace;
 
+import com.google.api.gax.rpc.StatusCode;
 import com.google.cloud.ServiceOptions;
 import com.google.cloud.bigtable.data.v2.BigtableDataClient;
+import com.google.cloud.bigtable.data.v2.BigtableDataSettings;
 import com.google.cloud.bigtable.data.v2.models.Row;
 import com.google.cloud.bigtable.data.v2.models.RowMutation;
+import com.google.common.collect.Sets;
 import io.opencensus.common.Scope;
 import io.opencensus.contrib.grpc.metrics.RpcViews;
 import io.opencensus.exporter.stats.stackdriver.StackdriverStatsExporter;
@@ -16,6 +19,7 @@ import io.opencensus.trace.Tracing;
 import io.opencensus.trace.config.TraceConfig;
 import io.opencensus.trace.samplers.Samplers;
 import java.io.IOException;
+import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.Logger;
@@ -39,7 +43,16 @@ public class SimpleMutationRead {
   public static void main(String[] args) throws IOException {
     configureOpenCensusExporters(Samplers.alwaysSample());
 
-    try (BigtableDataClient client = BigtableDataClient.create(PROJECT_ID, INSTANCE_ID)) {
+    BigtableDataSettings.Builder builder =
+        BigtableDataSettings.newBuilder().setProjectId(PROJECT_ID).setInstanceId(INSTANCE_ID);
+    Set<StatusCode.Code> codes = builder.stubSettings().readRowsSettings().getRetryableCodes();
+    Set<StatusCode.Code> newStatusCodes = Sets.newHashSet(codes);
+    newStatusCodes.add(StatusCode.Code.NOT_FOUND);
+
+    builder.stubSettings().readRowsSettings().setRetryableCodes(newStatusCodes);
+    builder.stubSettings().readRowSettings().setRetryableCodes(newStatusCodes);
+
+    try (BigtableDataClient client = BigtableDataClient.create(builder.build())) {
       String rowPrefix = UUID.randomUUID().toString();
 
       Span span = tracer.getCurrentSpan();
@@ -56,7 +69,7 @@ public class SimpleMutationRead {
         for (int i = 0; i < ROWS_COUNT; i++) {
           String finalRowKeyPrefix = UNKNOWN_KEY ? RandomStringUtils.random(5) : rowPrefix;
           try (Scope readScope = tracer.spanBuilder("ReadRow").startScopedSpan()) {
-            Row row = client.readRow(TABLE_ID, finalRowKeyPrefix + "-" + i);
+            Row row = client.readRow(TABLE_ID + "XYZ", finalRowKeyPrefix + "-" + i);
 
             if (row != null) {
               logger.info("Row: " + row.getKey().toStringUtf8());
