@@ -1,10 +1,9 @@
 package com.test.stackdriver.trace;
 
-import com.google.api.gax.batching.Batcher;
 import com.google.cloud.ServiceOptions;
 import com.google.cloud.bigtable.data.v2.BigtableDataClient;
 import com.google.cloud.bigtable.data.v2.models.Row;
-import com.google.cloud.bigtable.data.v2.models.RowMutationEntry;
+import com.google.cloud.bigtable.data.v2.models.RowMutation;
 import io.opencensus.common.Scope;
 import io.opencensus.contrib.grpc.metrics.RpcViews;
 import io.opencensus.exporter.stats.stackdriver.StackdriverStatsExporter;
@@ -18,15 +17,15 @@ import io.opencensus.trace.config.TraceConfig;
 import io.opencensus.trace.samplers.Samplers;
 import java.io.IOException;
 import java.util.UUID;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 public class SimpleMutationRead {
-  private static final Logger logger = Logger.getLogger(BigtableVeneer.class);
+  private static final Logger logger = Logger.getLogger(SimpleMutationRead.class);
 
   // [START configChanges]
   private static final String PROJECT_ID = ServiceOptions.getDefaultProjectId();
   private static final String INSTANCE_ID = System.getenv("INSTANCE_ID");
+  private static final Integer ROWS_COUNT = Integer.getInteger("rows.count", 10);
   // [END configChanges]
 
   // Refer to table metadata names by byte array in the HBase API
@@ -35,29 +34,25 @@ public class SimpleMutationRead {
 
   private static final Tracer tracer = Tracing.getTracer();
 
-  // 3. Trace it and check if some of those are failing with Cancelled?
-  public static void main(String[] args) throws IOException, InterruptedException {
-    logger.setLevel(Level.INFO);
+  public static void main(String[] args) throws IOException {
     configureOpenCensusExporters(Samplers.alwaysSample());
 
     try (Scope ss = tracer.spanBuilder("bigtable.readRow.op").startScopedSpan();
         BigtableDataClient client = BigtableDataClient.create(PROJECT_ID, INSTANCE_ID)) {
 
       String rowPrefix = UUID.randomUUID().toString();
-      try (Batcher<RowMutationEntry, Void> batcher = client.newBulkMutationBatcher(TABLE_ID);
-          Scope writeScope = tracer.spanBuilder("WriteRows").startScopedSpan()) {
 
-        Span span = tracer.getCurrentSpan();
-        span.addAnnotation("Writing to the table...");
+      Span span = tracer.getCurrentSpan();
+      span.addAnnotation("Writing to the table...");
+      logger.info("Started writing to the TABLE");
 
-        for (int i = 0; i < 10; i++) {
-          batcher.add(
-              RowMutationEntry.create(rowPrefix + "-" + i)
-                  .setCell(FAMILY_ID, "qualifier", 10_000L, "value-" + i));
-        }
+      for (int i = 0; i < ROWS_COUNT; i++) {
+        client.mutateRow(
+            RowMutation.create(TABLE_ID, rowPrefix + "-" + i)
+                .setCell(FAMILY_ID, "qualifier", 10_000L, "value-" + i));
       }
 
-      for (int i = 0; i < 10; i++) {
+      for (int i = 0; i < ROWS_COUNT; i++) {
         try (Scope readScope = tracer.spanBuilder("ReadRow").startScopedSpan()) {
           Row row = client.readRow(TABLE_ID, rowPrefix + "-" + i);
           logger.info("Row: " + row.getKey().toStringUtf8());
