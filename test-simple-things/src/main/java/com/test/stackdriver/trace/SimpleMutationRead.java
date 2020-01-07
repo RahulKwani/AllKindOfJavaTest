@@ -57,7 +57,12 @@ public class SimpleMutationRead {
           String finalRowKeyPrefix = UNKNOWN_KEY ? RandomStringUtils.random(5) : rowPrefix;
           try (Scope readScope = tracer.spanBuilder("ReadRow").startScopedSpan()) {
             Row row = client.readRow(TABLE_ID, finalRowKeyPrefix + "-" + i);
-            logger.info("Row: " + row.getKey().toStringUtf8());
+
+            if (row != null) {
+              logger.info("Row: " + row.getKey().toStringUtf8());
+            } else {
+              logger.info("Row is null");
+            }
           }
         }
       }
