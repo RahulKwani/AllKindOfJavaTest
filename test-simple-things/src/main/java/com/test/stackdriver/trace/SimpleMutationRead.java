@@ -17,6 +17,7 @@ import io.opencensus.trace.config.TraceConfig;
 import io.opencensus.trace.samplers.Samplers;
 import java.io.IOException;
 import java.util.UUID;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.Logger;
 
 public class SimpleMutationRead {
@@ -25,7 +26,8 @@ public class SimpleMutationRead {
   // [START configChanges]
   private static final String PROJECT_ID = ServiceOptions.getDefaultProjectId();
   private static final String INSTANCE_ID = System.getenv("INSTANCE_ID");
-  private static final Integer ROWS_COUNT = Integer.getInteger("rows.count", 10);
+  private static final Boolean UNKNOWN_KEY = Boolean.getBoolean("unknown.key");
+  private static final Integer ROWS_COUNT = Integer.getInteger("rows.count", 3);
   // [END configChanges]
 
   // Refer to table metadata names by byte array in the HBase API
@@ -38,7 +40,6 @@ public class SimpleMutationRead {
     configureOpenCensusExporters(Samplers.alwaysSample());
 
     try (BigtableDataClient client = BigtableDataClient.create(PROJECT_ID, INSTANCE_ID)) {
-
       String rowPrefix = UUID.randomUUID().toString();
 
       Span span = tracer.getCurrentSpan();
@@ -53,8 +54,9 @@ public class SimpleMutationRead {
 
       try (Scope ss = tracer.spanBuilder("bigtable.readRow.op").startScopedSpan()) {
         for (int i = 0; i < ROWS_COUNT; i++) {
+          String finalRowKeyPrefix = UNKNOWN_KEY ? RandomStringUtils.random(5) : rowPrefix;
           try (Scope readScope = tracer.spanBuilder("ReadRow").startScopedSpan()) {
-            Row row = client.readRow(TABLE_ID, rowPrefix + "-" + i);
+            Row row = client.readRow(TABLE_ID, finalRowKeyPrefix + "-" + i);
             logger.info("Row: " + row.getKey().toStringUtf8());
           }
         }
