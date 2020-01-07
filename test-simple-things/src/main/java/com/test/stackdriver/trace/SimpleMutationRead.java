@@ -1,5 +1,6 @@
 package com.test.stackdriver.trace;
 
+import com.google.api.gax.retrying.RetrySettings;
 import com.google.api.gax.rpc.StatusCode;
 import com.google.cloud.ServiceOptions;
 import com.google.cloud.bigtable.data.v2.BigtableDataClient;
@@ -49,8 +50,25 @@ public class SimpleMutationRead {
     Set<StatusCode.Code> newStatusCodes = Sets.newHashSet(codes);
     newStatusCodes.add(StatusCode.Code.NOT_FOUND);
 
-    builder.stubSettings().readRowsSettings().setRetryableCodes(newStatusCodes);
-    builder.stubSettings().readRowSettings().setRetryableCodes(newStatusCodes);
+    RetrySettings settings =
+        builder
+            .stubSettings()
+            .readRowsSettings()
+            .getRetrySettings()
+            .toBuilder()
+            .setMaxAttempts(3)
+            .build();
+
+    builder
+        .stubSettings()
+        .readRowsSettings()
+        .setRetryableCodes(newStatusCodes)
+        .setRetrySettings(settings);
+    builder
+        .stubSettings()
+        .readRowSettings()
+        .setRetryableCodes(newStatusCodes)
+        .setRetrySettings(settings);
 
     try (BigtableDataClient client = BigtableDataClient.create(builder.build())) {
       String rowPrefix = UUID.randomUUID().toString();
