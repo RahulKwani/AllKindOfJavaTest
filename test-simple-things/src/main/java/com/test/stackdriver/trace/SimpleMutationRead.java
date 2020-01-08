@@ -2,6 +2,7 @@ package com.test.stackdriver.trace;
 
 import com.google.cloud.ServiceOptions;
 import com.google.cloud.bigtable.data.v2.BigtableDataClient;
+import com.google.cloud.bigtable.data.v2.BigtableDataSettings;
 import com.google.cloud.bigtable.data.v2.models.Row;
 import com.google.cloud.bigtable.data.v2.models.RowMutation;
 import io.opencensus.common.Scope;
@@ -121,5 +122,6 @@ public class SimpleMutationRead {
     // like latency, req/res bytes, count of req/res messages, started rpc etc.
     // -------------------------------------------------------------------------------------------
     RpcViews.registerAllGrpcViews();
+    BigtableDataSettings.enableOpenCensusStats();
   }
 }
