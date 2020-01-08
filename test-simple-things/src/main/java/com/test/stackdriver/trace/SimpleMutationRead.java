@@ -91,6 +91,7 @@ public class SimpleMutationRead {
             span.addAnnotation("Row Key Not Found");
             logger.info("Row is null");
           }
+          span.end();
         }
       }
 
