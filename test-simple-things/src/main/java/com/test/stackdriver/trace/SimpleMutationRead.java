@@ -80,10 +80,9 @@ public class SimpleMutationRead {
 
       for (int i = 0; i < ROWS_COUNT; i++) {
         String finalRowKeyPrefix = UNKNOWN_KEY ? RandomStringUtils.random(5) : rowPrefix;
-        try (Scope readScope = tracer.spanBuilder("test.readRow.trace").startScopedSpan()) {
+        try (Scope readScope = tracer.spanBuilder("test.readRow.trace").startScopedSpan(); ) {
+          Span span = tracer.spanBuilder("readRow.trace").startSpan();
           Row row = client.readRow(TABLE_ID, finalRowKeyPrefix + "-" + i);
-
-          Span span = tracer.getCurrentSpan();
 
           if (row != null) {
             span.addAnnotation("Row Key Found");
