@@ -121,6 +121,7 @@ public class SimpleMutationRead {
     // like latency, req/res bytes, count of req/res messages, started rpc etc.
     // -------------------------------------------------------------------------------------------
     RpcViews.registerAllGrpcViews();
+    RpcViews.registerAllGrpcBasicViews();
     BigtableDataSettings.enableOpenCensusStats();
   }
 }
