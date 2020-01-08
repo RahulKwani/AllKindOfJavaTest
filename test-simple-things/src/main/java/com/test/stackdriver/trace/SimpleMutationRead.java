@@ -1,13 +1,9 @@
 package com.test.stackdriver.trace;
 
-import com.google.api.gax.retrying.RetrySettings;
-import com.google.api.gax.rpc.StatusCode;
 import com.google.cloud.ServiceOptions;
 import com.google.cloud.bigtable.data.v2.BigtableDataClient;
-import com.google.cloud.bigtable.data.v2.BigtableDataSettings;
 import com.google.cloud.bigtable.data.v2.models.Row;
 import com.google.cloud.bigtable.data.v2.models.RowMutation;
-import com.google.common.collect.Sets;
 import io.opencensus.common.Scope;
 import io.opencensus.contrib.grpc.metrics.RpcViews;
 import io.opencensus.exporter.stats.stackdriver.StackdriverStatsExporter;
@@ -20,7 +16,6 @@ import io.opencensus.trace.Tracing;
 import io.opencensus.trace.config.TraceConfig;
 import io.opencensus.trace.samplers.Samplers;
 import java.io.IOException;
-import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.log4j.Logger;
@@ -44,37 +39,36 @@ public class SimpleMutationRead {
   public static void main(String[] args) throws IOException {
     configureOpenCensusExporters(Samplers.alwaysSample());
 
-    BigtableDataSettings.Builder builder =
-        BigtableDataSettings.newBuilder().setProjectId(PROJECT_ID).setInstanceId(INSTANCE_ID);
-    Set<StatusCode.Code> codes = builder.stubSettings().readRowsSettings().getRetryableCodes();
-    Set<StatusCode.Code> newStatusCodes = Sets.newHashSet(codes);
-    newStatusCodes.add(StatusCode.Code.NOT_FOUND);
+    //    BigtableDataSettings.Builder builder =
+    //        BigtableDataSettings.newBuilder().setProjectId(PROJECT_ID).setInstanceId(INSTANCE_ID);
+    //    Set<StatusCode.Code> codes =
+    // builder.stubSettings().readRowsSettings().getRetryableCodes();
+    //    Set<StatusCode.Code> newStatusCodes = Sets.newHashSet(codes);
+    //    newStatusCodes.add(StatusCode.Code.NOT_FOUND);
+    //
+    //    RetrySettings settings =
+    //        builder
+    //            .stubSettings()
+    //            .readRowsSettings()
+    //            .getRetrySettings()
+    //            .toBuilder()
+    //            .setMaxAttempts(3)
+    //            .build();
+    //
+    //    builder
+    //        .stubSettings()
+    //        .readRowsSettings()
+    //        .setRetryableCodes(newStatusCodes)
+    //        .setRetrySettings(settings);
+    //    builder
+    //        .stubSettings()
+    //        .readRowSettings()
+    //        .setRetryableCodes(newStatusCodes)
+    //        .setRetrySettings(settings);
 
-    RetrySettings settings =
-        builder
-            .stubSettings()
-            .readRowsSettings()
-            .getRetrySettings()
-            .toBuilder()
-            .setMaxAttempts(3)
-            .build();
-
-    builder
-        .stubSettings()
-        .readRowsSettings()
-        .setRetryableCodes(newStatusCodes)
-        .setRetrySettings(settings);
-    builder
-        .stubSettings()
-        .readRowSettings()
-        .setRetryableCodes(newStatusCodes)
-        .setRetrySettings(settings);
-
-    try (BigtableDataClient client = BigtableDataClient.create(builder.build())) {
+    try (BigtableDataClient client = BigtableDataClient.create(PROJECT_ID, INSTANCE_ID)) {
       String rowPrefix = UUID.randomUUID().toString();
 
-      Span span = tracer.getCurrentSpan();
-      span.addAnnotation("Writing to the table...");
       logger.info("Started writing to the TABLE");
 
       for (int i = 0; i < ROWS_COUNT; i++) {
@@ -83,17 +77,19 @@ public class SimpleMutationRead {
                 .setCell(FAMILY_ID, "qualifier", 10_000L, "value-" + i));
       }
 
-      try (Scope ss = tracer.spanBuilder("bigtable.readRow.op").startScopedSpan()) {
-        for (int i = 0; i < ROWS_COUNT; i++) {
-          String finalRowKeyPrefix = UNKNOWN_KEY ? RandomStringUtils.random(5) : rowPrefix;
-          try (Scope readScope = tracer.spanBuilder("ReadRow").startScopedSpan()) {
-            Row row = client.readRow(TABLE_ID + "XYZ", finalRowKeyPrefix + "-" + i);
+      for (int i = 0; i < ROWS_COUNT; i++) {
+        String finalRowKeyPrefix = UNKNOWN_KEY ? RandomStringUtils.random(5) : rowPrefix;
+        try (Scope readScope = tracer.spanBuilder("ReadRow").startScopedSpan()) {
+          Row row = client.readRow(TABLE_ID, finalRowKeyPrefix + "-" + i);
 
-            if (row != null) {
-              logger.info("Row: " + row.getKey().toStringUtf8());
-            } else {
-              logger.info("Row is null");
-            }
+          Span span = tracer.getCurrentSpan();
+
+          if (row != null) {
+            span.addAnnotation("Row Key Found");
+            logger.info("Row: " + row.getKey().toStringUtf8());
+          } else {
+            span.addAnnotation("Row Key Not Found");
+            logger.info("Row is null");
           }
         }
       }
