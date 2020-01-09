@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.local.test.program</groupId>
-    <artifactId>bigtable-client-test</artifactId>
+    <artifactId>bigtable-veneer-client-test</artifactId>
     <description>Learn Cloud Bigtable</description>
 
     <properties>
@@ -87,9 +87,18 @@
         </dependency>
         <dependency>
             <groupId>io.opencensus</groupId>
-            <artifactId>opencensus-impl</artifactId>
+            <artifactId>opencensus-exporter-trace-zipkin</artifactId>
             <version>${opencensus.version}</version>
-            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-auth</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -104,9 +113,21 @@
         </dependency>
 
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <groupId>io.opencensus</groupId>
+            <artifactId>opencensus-impl</artifactId>
+            <version>${opencensus.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>23.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.2</version>
         </dependency>
 
         <dependency>

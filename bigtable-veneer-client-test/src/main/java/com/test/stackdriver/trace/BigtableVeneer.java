@@ -29,11 +29,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.UUID;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BigtableVeneer {
-  private static final Logger logger = Logger.getLogger(BigtableVeneer.class);
+  private static final Logger logger = Logger.getLogger(BigtableVeneer.class.getName());
 
   // [START configChanges]
   private static final String PROJECT_ID = ServiceOptions.getDefaultProjectId();
@@ -152,10 +152,10 @@ public class BigtableVeneer {
         }
       }
     } catch (IOException e) {
-      logger.error("Exception while running HelloWorld: " + e.getMessage());
+      logger.severe("Exception while running HelloWorld: " + e.getMessage());
       StringWriter stackTraceString = new StringWriter();
       e.printStackTrace(new PrintWriter(stackTraceString));
-      logger.error(stackTraceString.toString());
+      logger.severe(stackTraceString.toString());
       System.exit(1);
     }
   }
@@ -164,7 +164,7 @@ public class BigtableVeneer {
     try {
       Thread.sleep(ms);
     } catch (Exception e) {
-      logger.error("Exception while sleeping " + e.getMessage());
+      logger.severe("Exception while sleeping " + e.getMessage());
     }
   }
 
@@ -173,7 +173,7 @@ public class BigtableVeneer {
       // Write some rows to the table
       Span span = tracer.getCurrentSpan();
       span.addAnnotation("Writing greetings to the table...");
-      logger.debug("Write some greetings to the table");
+      logger.fine("Write some greetings to the table");
       for (int i = 0; i < GREETINGS.length; i++) {
         // Each row has a unique row key.
         //
@@ -204,7 +204,7 @@ public class BigtableVeneer {
 
       //      String greeting = rowResult.getCells().get(0).getValue().toStringUtf8();
       //      logger.debug("Get a single greeting by row key");
-      logger.debug(String.format("\t%s = %s\n", rowKey, rowResult));
+      logger.fine(String.format("\t%s = %s\n", rowKey, rowResult));
       // [END getting_a_row]
 
       // [START scanning_all_rows]
@@ -213,18 +213,18 @@ public class BigtableVeneer {
       byte[] stopRow = (prefix + "#greeting3").getBytes();
 
       Query query = Query.create(TABLE_ID).prefix(prefix).range("#greeting0", "#greeting3");
-      logger.debug("Scan for all greetings:");
+      logger.fine("Scan for all greetings:");
       ServerStream<Row> stream = client.readRows(query);
       for (Row row : stream) {
         ByteString valueBytes = row.getCells().get(0).getValue();
-        logger.debug('\t' + valueBytes.toStringUtf8());
+        logger.fine('\t' + valueBytes.toStringUtf8());
       }
       // [END scanning_all_rows]
     }
   }
 
   public static void main(String[] args) throws IOException {
-    logger.setLevel(Level.INFO);
+    logger.setLevel(Level.FINE);
 
     // [START config_oc_trace_sample]
     // sample every 1000 transactions

@@ -18,11 +18,11 @@ import io.opencensus.trace.config.TraceConfig;
 import io.opencensus.trace.samplers.Samplers;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Logger;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.log4j.Logger;
 
 public class SimpleMutationRead {
-  private static final Logger logger = Logger.getLogger(SimpleMutationRead.class);
+  private static final Logger logger = Logger.getLogger(SimpleMutationRead.class.getName());
 
   // [START configChanges]
   private static final String PROJECT_ID = ServiceOptions.getDefaultProjectId();
@@ -125,6 +125,4 @@ public class SimpleMutationRead {
     RpcViews.registerAllGrpcBasicViews();
     BigtableDataSettings.enableOpenCensusStats();
   }
-
-
 }
