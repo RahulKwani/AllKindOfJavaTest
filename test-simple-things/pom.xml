@@ -16,83 +16,16 @@
     <!--This will set java version-->
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-
     <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
 
-    <google-auth-library-oauth2-http.version>0.15.0</google-auth-library-oauth2-http.version>
-    <opencensus.version>0.23.0</opencensus.version>
-    <bigtable.version>1.10.0</bigtable.version>
-
     <bigtable.veneer.version>1.8.0</bigtable.veneer.version>
-    <gax.version>1.49.0</gax.version>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>io.opencensus</groupId>
-      <artifactId>opencensus-api</artifactId>
-      <version>${opencensus.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.opencensus</groupId>
-      <artifactId>opencensus-exporter-stats-stackdriver</artifactId>
-      <version>${opencensus.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>io.grpc</groupId>
-          <artifactId>grpc-auth</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>io.grpc</groupId>
-          <artifactId>grpc-core</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>io.opencensus</groupId>
-      <artifactId>opencensus-exporter-trace-stackdriver</artifactId>
-      <version>${opencensus.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>io.grpc</groupId>
-          <artifactId>grpc-auth</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>io.grpc</groupId>
-          <artifactId>grpc-core</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>io.opencensus</groupId>
-      <artifactId>opencensus-impl</artifactId>
-      <version>${opencensus.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <!--    Dependencies from Google Community Java class-->
-    <dependency>
-      <groupId>com.google.auth</groupId>
-      <artifactId>google-auth-library-oauth2-http</artifactId>
-      <version>${google-auth-library-oauth2-http.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-bigtable</artifactId>
       <version>${bigtable.veneer.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.api</groupId>
-          <artifactId>gax</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.api</groupId>
-      <artifactId>gax</artifactId>
-      <version>${gax.version}</version>
     </dependency>
 
     <dependency>
