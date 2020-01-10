@@ -6,6 +6,8 @@ bin
 var
 sdist
 target
+.mvn
+.mvnw*
 
 # Unit test / coverage reports
 .coverage
