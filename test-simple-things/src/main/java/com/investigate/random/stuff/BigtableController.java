@@ -28,17 +28,26 @@ public class BigtableController {
     return Boolean.TRUE;
   }
 
-  @GetMapping("printThreadDump")
-  public void printThreadDump() {
+  @GetMapping("cpus")
+  public long availableProcessors() {
+    logger.info("No of processors: " + Runtime.getRuntime().availableProcessors());
+    return Runtime.getRuntime().availableProcessors();
+  }
+
+  @GetMapping("threadDump")
+  public String printThreadDump() {
     logger.info(" <------- Threads Dump -------> ");
     logger.info("No of processors: " + Runtime.getRuntime().availableProcessors());
 
-    logger.info(generateThreadDump());
+    String threadDump = generateThreadDump();
+    logger.info(threadDump);
+    return threadDump;
   }
 
   @GetMapping("/rows/{num}")
   public List<RowModel> fetchSomeRows(@PathVariable("num") Integer num) {
     List<RowModel> models = new ArrayList<>();
+
     for (Row row : client.readRows(Query.create(TABLE_ID).limit(num))) {
       models.add(new RowModel(row.getKey(), row.getCells()));
     }
