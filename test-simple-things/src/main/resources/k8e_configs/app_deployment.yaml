@@ -6,15 +6,15 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      name: veneer-app
+      name: java-bigtable
   template:
     metadata:
       labels:
-        app: bigtable-veneer-client
+        app: bigtable-veneer-client, java-bigtable
     spec:
       containers:
         - name: cos-channel-clr
-          image: 'gcr.io/${google_cloud_project}/verify-bigtable:v4'
+          image: 'gcr.io/grass-clump-479/verify-bigtable:v4'
           ports:
             - containerPort: 8080
           resources:
