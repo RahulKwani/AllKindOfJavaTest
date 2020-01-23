@@ -4,10 +4,13 @@ metadata:
   name: veneer-app
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      name: veneer-app
   template:
     metadata:
       labels:
-        app: bigtable-veneer-client, java-bigtable
+        app: bigtable-veneer-client
     spec:
       containers:
         - name: cos-channel-clr
