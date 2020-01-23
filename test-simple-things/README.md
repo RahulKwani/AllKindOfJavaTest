@@ -46,3 +46,28 @@ kubectl rollout undo deployment/hello-java
 
 ./mvnw -DskipTests com.google.cloud.tools:jib-maven-plugin:build \
   -Dimage=gcr.io/${google_cloud_project}/verify-bigtable:v3
+  
+  
+  
+
+To enable the JVM to use maximum of the CPUs within each pod, the please refer this [section](https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/#specify-a-cpu-request-and-a-cpu-limit).
+  		
+```yaml
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: app-name
+spec:
+  ...
+  template:
+    metadata:
+      labels:
+        app: app-name
+    spec:
+      containers:
+        - name: container-name
+          ...
+          resources:
+            limits:
+              cpu: "4" # To avail more than one CPU while deploying in GKE.
+```
