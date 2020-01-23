@@ -1,4 +1,4 @@
-apiVersion: svc/v1
+apiVersion: apps/v1
 kind: Service
 metadata:
   name: veneer-clnt-svc
@@ -9,5 +9,5 @@ spec:
       targetPort: 8080
       protocol: TCP
   selector:
-    app: veneer-app-deployment
+    app: veneer-app
   type: LoadBalancer

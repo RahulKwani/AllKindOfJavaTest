@@ -5,12 +5,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: cos-channel-clr
+      app: veneer-app
   replicas: 3 # tells deployment to run 3 pods matching the template
   template: # create pods using pod definition in this template
     metadata:
       labels:
-        app: cos-channel-clr
+        app: veneer-app
     spec:
       containers:
         - name: cos-channel-clr
