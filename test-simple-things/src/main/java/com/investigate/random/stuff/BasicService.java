@@ -20,6 +20,8 @@ import com.google.cloud.bigtable.data.v2.models.RowMutationEntry;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -109,7 +111,7 @@ public class BasicService {
     logger.info("!------ START ------!");
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
-    String rowKey = "TOn17Jan2020-" + RandomStringUtils.random(5);
+    String rowKey = "TOn31Jan2020-" + RandomStringUtils.random(5);
 
     sampling(client);
     print("------------------ #1");
@@ -430,22 +432,18 @@ public class BasicService {
     }
 
     final ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-    final ThreadInfo[] threadInfos =
-        threadMXBean.getThreadInfo(threadMXBean.getAllThreadIds(), 100);
-    for (ThreadInfo threadInfo : threadInfos) {
-      dump.append('"');
-      dump.append(threadInfo.getThreadName());
-      dump.append("\" ");
-      final Thread.State state = threadInfo.getThreadState();
-      dump.append("\n   java.lang.Thread.State: ");
-      dump.append(state);
-      final StackTraceElement[] stackTraceElements = threadInfo.getStackTrace();
-      for (final StackTraceElement stackTraceElement : stackTraceElements) {
-        dump.append("\n        at ");
-        dump.append(stackTraceElement);
-      }
-      dump.append("\n\n");
-    }
+    final ThreadInfo[] threadInfos = threadMXBean.getThreadInfo(threadMXBean.getAllThreadIds(), 10);
+
+    Arrays.stream(threadInfos)
+        .sorted(Comparator.comparing(ThreadInfo::getThreadName))
+        .forEach(
+            thInfo ->
+                dump.append('"')
+                    .append(thInfo.getThreadName())
+                    .append("\" ")
+                    .append("\n   java.lang.Thread.State: ")
+                    .append(thInfo.getThreadState())
+                    .append("\n\n"));
 
     return dump.toString();
   }
