@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: cos-channel-clr
-          image: 'gcr.io/grass-clump-479/verify-bigtable:v4'
+          image: 'gcr.io/grass-clump-479/verify-bigtable:v5'
           ports:
             - containerPort: 8080
               name: server
