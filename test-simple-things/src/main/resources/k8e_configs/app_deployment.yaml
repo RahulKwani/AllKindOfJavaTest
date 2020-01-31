@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: veneer-app
-  replicas: 3 # tells deployment to run 3 pods matching the template
+  replicas: 1 # tells deployment to run 3 pods matching the template
   template: # create pods using pod definition in this template
     metadata:
       labels:
@@ -20,6 +20,6 @@ spec:
               name: server
           resources:
             requests:
-              cpu: "1.0"
+              cpu: "1" # "2" or "3" or "8" also works it should be less than
             limits:
-              cpu: "8"
+              cpu: "6" # This limits the maximum number of CPU available to the app if auto scaling is active.
