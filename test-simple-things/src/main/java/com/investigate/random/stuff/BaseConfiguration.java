@@ -12,24 +12,26 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BaseConfiguration {
 
-  private static final String PROJECT_ID = ServiceOptions.getDefaultProjectId();
-  private static final String INSTANCE_ID = "connectors";
+  static final String PROJECT_ID = ServiceOptions.getDefaultProjectId();
+  static final String INSTANCE_ID = "connectors";
 
   static final String TABLE_ID = "Hello-Bigtable";
   static final String COL_FAMILY = "cf1";
 
   @Bean
-  public BigtableDataClient dataClient() throws IOException {
-    try {
-      return BigtableDataClient.create(getDataSettings());
-    } catch (Exception ex) {
-      ex.printStackTrace();
-      throw ex;
-    }
+  public BigtableDataClientFactory dataClientFactory() throws IOException {
+    return BigtableDataClientFactory.create(getDataSettings());
   }
 
-  public void multipleConnection() throws IOException {
-    BigtableDataClientFactory factory = BigtableDataClientFactory.create(getDataSettings());
+  @Bean
+  public BigtableDataClient dataClient(BigtableDataClientFactory dataClientFactory) {
+    return dataClientFactory.createDefault();
+  }
+
+  @Bean
+  public BasicService service(
+      BigtableDataClientFactory dataClientFactory, BigtableDataClient dataClient) {
+    return new BasicService(dataClientFactory, dataClient);
   }
 
   private static BigtableDataSettings getDataSettings() {
