@@ -3,6 +3,7 @@ package com.learn.hbase.bigtable.util;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.hadoop.hbase.Cell;
@@ -112,42 +113,13 @@ public class MyUtil {
   }
 
   public static void main(String[] args) {
-
-    for (int i = 0; i < 200; i++) {
-      String randomString = RandomStringUtils.random(10, false, false);
-      foo(randomString);
-      fixedFoo(randomString);
+    for (String name : getStr()) {
+      System.out.println(name);
     }
+  }
 
-    //    String test = "a釋妢醜婮㳯뺲䂆㾨柮脻";
-    //    testArg(test);
-    /*
-    aᐰ眼豤皳塇趦䜸궁酡㯉
-    isBadTableName
-
-    a먔倔芘滽熬단ᨶ炴晝펆
-    isBadTableName
-    --
-    a剸쐪䠗츹趜䙰㨤ᗠ海룒
-
-    a䐖襃퉵ꖻ롾ﻱ瘈緸캧㯐
-
-    a䐖襃퉵ꖻ롾ﻱ瘈緸캧㯐
-
-    a䐖襃퉵ꖻ롾ﻱ瘈緸캧㯐
-
-    a䎲ᗄ膰ර栤柨쌼傸捐狤
-
-    a楴䘀ሳ鲞텍暲桛䱎熅蘫
-    a啘慾ްᨮ팠硰ᒑ䢱䥪帶
-    a箈跑ꡗ솼巤杦囹琿臽膢
-
-    a梦紧㟒벳ყ珪끵喷厨럿
-    aӦᕦꚩ厂珣ǽ짗䎲㷻膈
-
-     */
-
-    //    aك氚步ꇠ굃墡杖汷⋞暚
+  private static List<String> getStr() {
+    return null;
   }
 
   private static boolean isBadTableName2(String tableName) {

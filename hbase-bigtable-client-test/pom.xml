@@ -15,7 +15,8 @@
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <bigtable.version>1.12.1</bigtable.version>
+    <bigtable.version>1.12.2-SNAPSHOT</bigtable.version>
+    <metrics.version>4.1.1</metrics.version>
 
     <!--    <hbase.version>1.4.10</hbase.version>-->
     <hbase.version>2.2.0</hbase.version>
@@ -35,16 +36,16 @@
       </exclusions>
     </dependency>
 
-<!--    <dependency>-->
-<!--      <groupId>com.google.guava</groupId>-->
-<!--      <artifactId>guava</artifactId>-->
-<!--      <version>12.0.1</version>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>org.apache.hbase</groupId>-->
-<!--      <artifactId>hbase-protocol</artifactId>-->
-<!--      <version>${hbase.version}</version>-->
-<!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>com.google.guava</groupId>-->
+    <!--      <artifactId>guava</artifactId>-->
+    <!--      <version>12.0.1</version>-->
+    <!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.apache.hbase</groupId>-->
+    <!--      <artifactId>hbase-protocol</artifactId>-->
+    <!--      <version>${hbase.version}</version>-->
+    <!--    </dependency>-->
 
     <dependency>
       <groupId>org.apache.hbase</groupId>

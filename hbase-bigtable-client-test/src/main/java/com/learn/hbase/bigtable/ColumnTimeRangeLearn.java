@@ -4,6 +4,7 @@ import static com.learn.hbase.bigtable.util.MyUtil.qualifier;
 import static com.learn.hbase.bigtable.util.MyUtil.timeInLong;
 import static com.learn.hbase.bigtable.util.MyUtil.value;
 
+import com.google.cloud.bigtable.config.Logger;
 import com.google.common.collect.ImmutableList;
 import com.learn.hbase.bigtable.util.HBaseBoot;
 import java.io.IOException;
@@ -50,13 +51,13 @@ public class ColumnTimeRangeLearn {
   private Table table;
 
   ColumnTimeRangeLearn() throws Exception {
-    client = new HBaseBoot(59327);
+    //    client = new HBaseBoot(59327);
+    client = new HBaseBoot("grass-clump-479", "connectors");
     if (!client.admin.tableExists(TableName.valueOf(TABLE_ID))) {
       createAndAdd(client);
     }
-    table = client.connection.getTable(TableName.valueOf(TABLE_ID));
+    //    table = client.connection.getTable(TableName.valueOf(TABLE_ID));
 
-    //    client = new HBaseBoot("grass-clump-479", "connectors");
   }
 
   static void createAndAdd(HBaseBoot client) throws IOException {
@@ -186,7 +187,7 @@ public class ColumnTimeRangeLearn {
     printTimestampOnly(table.getScanner(scan));
   }
 
-  public static void main(String[] args) throws Exception {
+  public static void main2(String[] args) throws Exception {
     ColumnTimeRangeLearn ct = new ColumnTimeRangeLearn();
     //     Admin operations
 
@@ -195,18 +196,25 @@ public class ColumnTimeRangeLearn {
     //    ct.table = ct.client.connection.getTable(TableName.valueOf(TABLE_ID));
 
     //     simple table scan
-    //    ct.scanTable();
+    ct.scanTable();
     System.out.println("--------------------------------");
 
-    //    ct.scanTimeStampWithCF();
+    ct.scanTimeStampWithCF();
     //    System.out.println("--------------------------------");
     //    ct.scanTimeStamp();
-    ct.performBatchCallBack();
+    //    ct.performBatchCallBack();
     //
     //    HTableDescriptor[] descriptors =
     //        ct.client.admin.getTableDescriptorsByTableName(ImmutableList.of());
     //    for (HTableDescriptor d : descriptors) {
     //      System.out.println("GTDBT-> " + d.getNameAsString());
     //    }
+  }
+
+  public static void main(String[] args) {
+    Logger logger = new Logger(ColumnTimeRangeLearn.class);
+    logger.info("INFO : sdkjf jfkljd sfkljdsfl kldsfdsklf");
+    logger.debug("DEBUG : gdsfkljdslkfj kjflkdjsf k");
+    logger.warn("WARNNING : ");
   }
 }

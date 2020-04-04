@@ -5,7 +5,6 @@ import com.learn.hbase.bigtable.util.HBaseBoot;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
@@ -13,7 +12,6 @@ import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Row;
 import org.apache.hadoop.hbase.client.RowMutations;
 import org.apache.hadoop.hbase.client.Scan;
-import org.apache.hadoop.hbase.client.SnapshotDescription;
 import org.apache.hadoop.hbase.client.Table;
 
 public class UnderstandingHBase {
@@ -21,76 +19,77 @@ public class UnderstandingHBase {
   private final HBaseBoot client;
 
   UnderstandingHBase() throws Exception {
-    client = new HBaseBoot(59327);
+    client = new HBaseBoot(62818);
     //    client = new HBaseBoot("grass-clump-479", "connectors");
   }
 
-  private void learnSnapshots(String pattern) throws Exception {
-    System.out.println("LEARN snapshots");
+  //  private void learnSnapshots(String pattern) throws Exception {
+  //    System.out.println("LEARN snapshots");
+  //
+  //    try (Admin admin = client.connection.getAdmin()) {
+  //      try {
+  //        System.out.println("admin.listSnapshots");
+  //        int listCount = 0;
+  //        for (HBaseProtos.SnapshotDescription description : admin.listSnapshots(pattern)) {
+  //          System.out.println(description);
+  //          listCount++;
+  //        }
+  //        System.out.println("TOTAL:===> " + listCount);
+  //
+  //      } catch (Exception ex) {
+  //        ex.printStackTrace(System.out);
+  //      }
+  //
+  //      try {
+  //        System.out.println("admin.listTableSnapshots");
+  //        int listCount = 0;
+  //        for (HBaseProtos.SnapshotDescription description :
+  //            admin.listTableSnapshots(pattern, pattern)) {
+  //          System.out.println(description);
+  //          listCount++;
+  //        }
+  //        System.out.println("TOTAL:===> " + listCount);
+  //
+  //      } catch (Exception ex) {
+  //        ex.printStackTrace(System.out);
+  //      }
+  //
+  //      try {
+  //        System.out.println("admin.deleteSnapshots:===> ");
+  //        admin.deleteSnapshots(pattern);
+  //        System.out.println("End");
+  //
+  //      } catch (Exception ex) {
+  //        ex.printStackTrace(System.out);
+  //      }
+  //
+  //      try {
+  //        System.out.println("admin.deleteSnapshots:===> ");
+  //        admin.deleteTableSnapshots(pattern, pattern);
+  //        System.out.println("End");
+  //      } catch (Exception ex) {
+  //        ex.printStackTrace(System.out);
+  //      }
+  //    }
+  //  }
 
-    try (Admin admin = client.connection.getAdmin()) {
-      try {
-        System.out.println("admin.listSnapshots");
-        int listCount = 0;
-        for (SnapshotDescription description : admin.listSnapshots(pattern)) {
-          System.out.println(description);
-          listCount++;
-        }
-        System.out.println("TOTAL:===> " + listCount);
-
-      } catch (Exception ex) {
-        ex.printStackTrace(System.out);
-      }
-
-      try {
-        System.out.println("admin.listTableSnapshots");
-        int listCount = 0;
-        for (SnapshotDescription description : admin.listTableSnapshots(pattern, pattern)) {
-          System.out.println(description);
-          listCount++;
-        }
-        System.out.println("TOTAL:===> " + listCount);
-
-      } catch (Exception ex) {
-        ex.printStackTrace(System.out);
-      }
-
-      try {
-        System.out.println("admin.deleteSnapshots:===> ");
-        admin.deleteSnapshots(pattern);
-        System.out.println("End");
-
-      } catch (Exception ex) {
-        ex.printStackTrace(System.out);
-      }
-
-      try {
-        System.out.println("admin.deleteSnapshots:===> ");
-        admin.deleteTableSnapshots(pattern, pattern);
-        System.out.println("End");
-      } catch (Exception ex) {
-        ex.printStackTrace(System.out);
-      }
-    }
-  }
-
-  private void learnSnapshots2() throws Exception {
-    try (Admin admin = client.connection.getAdmin()) {
-      try {
-        System.out.println("admin.listSnapshots");
-        int listCount = 0;
-        for (SnapshotDescription description :
-            admin.listTableSnapshots("My-Table-tSGO6xPghd", "")) {
-          System.out.println(description);
-          listCount++;
-        }
-        System.out.println("TOTAL:===> " + listCount);
-
-      } catch (Exception ex) {
-        ex.printStackTrace(System.out);
-      }
-    }
-  }
+  //  private void learnSnapshots2() throws Exception {
+  //    try (Admin admin = client.connection.getAdmin()) {
+  //      try {
+  //        System.out.println("admin.listSnapshots");
+  //        int listCount = 0;
+  //        for (HBaseProtos.SnapshotDescription description :
+  //            admin.listTableSnapshots("My-Table-tSGO6xPghd", "")) {
+  //          System.out.println(description);
+  //          listCount++;
+  //        }
+  //        System.out.println("TOTAL:===> " + listCount);
+  //
+  //      } catch (Exception ex) {
+  //        ex.printStackTrace(System.out);
+  //      }
+  //    }
+  //  }
 
   private void learnScanner(TableName tableName) throws Exception {
     System.out.println("Learn Scanner");
@@ -213,7 +212,6 @@ public class UnderstandingHBase {
     //  hBase.learnAsyncTable(TableName.valueOf("My-Table-ZTtQKL9Imy"));
     //    hBase.learnTable(TableName.valueOf("My-Table-ZTtQKL9Imy"));
 
-    hBase.learnSnapshots2();
     //
     //    Pattern p = null;
     //    hBase1.client.admin.deleteTableSnapshots("My-Table-ZTtQKL9Imy", "");
