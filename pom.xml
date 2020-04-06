@@ -12,6 +12,7 @@
     <module>kotlin-learn</module>
     <module>hbase-bigtable-client-test</module>
     <module>test-simple-things</module>
+    <module>Practice-DS-and-algo</module>
   </modules>
 
   <build>
